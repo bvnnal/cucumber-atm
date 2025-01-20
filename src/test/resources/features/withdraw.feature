@@ -11,5 +11,6 @@ Scenario: Withdraw amount less than balance
     Then my account balance is 150
 
 Scenario: Withdraw amount more than balance
-    When I overdraw 5000 from ATM
-    Then my account balance is 200
+    When I overdraw 500 from ATM
+    Then the operation should fail with message "Not enough balance."
+    And my account balance is 200

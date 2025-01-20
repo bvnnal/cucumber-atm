@@ -25,12 +25,12 @@ public class StepDefATM {
     }
 
     @Given("a customer with id {int} and pin {int} with balance {float} exists")
-    public void a_customer_with_id_and_pin_with_balance_exists(int id, int pin, double balance) {
+    public void a_customer_with_id_and_pin_with_balance_exists(int id, int pin, int balance) {
         bank.openAccount(new Customer(id, pin, balance));
     }
 
     @When("I login to ATM with id {int} and pin {int}")
-    public void i_login_to_ATM_with_id_and_pin(int id, int pin) {
+    public void i_login_to_atm_with_id_and_pin(int id, int pin) {
         validLogin = atm.validateCustomer(id, pin);
     }
 
@@ -50,12 +50,12 @@ public class StepDefATM {
     }
 
     @When("I overdraw {float} from ATM")
-    public void i_withdraw_from_atm_more_than_balance(double amount) throws NotEnoughBalanceException {
+    public void i_withdraw_from_atm_more_than_balance(double amount){
         assertThrows(NotEnoughBalanceException.class,
                 () -> atm.withdraw(amount));
     }
     @Then("my account balance is {float}")
-    public void my_account_balance_is(double balance) {
+    public void my_account_balance_is(int balance) {
         assertEquals(balance, atm.getBalance());
     }
 
@@ -67,7 +67,16 @@ public class StepDefATM {
     @Then("customer id {int} account balance is {float}")
     public void customer_id_account_balance_is(int id, double balance) {
         assertEquals(balance,
-                     bank.getCustomer(id).getAccount().getBalance());
+                bank.getCustomer(id).getAccount().getBalance());
     }
+    @When("I deposit {float} to ATM")
+    public void i_deposit_to_atm(int amount) {
+        atm.deposit(amount);
+    }
+    @Then("the operation should fail with message {string}")
+    public void the_operation_should_fail_with_message(String message) {
+        assertEquals(message, atm.getErrorMessage());
+    }
+
 
 }
